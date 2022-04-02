@@ -1,16 +1,15 @@
 package com.masoudjafari.kiliaro.images
 
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.masoudjafari.kiliaro.EventObserver
 import com.masoudjafari.kiliaro.ImagesAdapter
+import com.masoudjafari.kiliaro.R
 import com.masoudjafari.kiliaro.databinding.FragmentImagesBinding
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -22,7 +21,11 @@ class ImagesFragment : Fragment() {
     private lateinit var binding: FragmentImagesBinding
     private lateinit var listAdapter: ImagesAdapter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = FragmentImagesBinding.inflate(inflater, container, false).apply {
             viewmodel = viewModel
         }
@@ -36,6 +39,21 @@ class ImagesFragment : Fragment() {
         setLayoutManager()
         setupListAdapter()
         setupNavigation()
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.images_fragment_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.refresh -> {
+                viewModel.refresh()
+                true
+            }
+            else -> false
+        }
     }
 
     private fun setupNavigation() {
@@ -45,7 +63,8 @@ class ImagesFragment : Fragment() {
     }
 
     private fun setLayoutManager() {
-        binding.imagesList.layoutManager = GridLayoutManager(context, 3,GridLayoutManager.VERTICAL, false)
+        binding.imagesList.layoutManager =
+            GridLayoutManager(context, 3, GridLayoutManager.VERTICAL, false)
     }
 
     private fun setupListAdapter() {
@@ -59,7 +78,7 @@ class ImagesFragment : Fragment() {
     }
 
     private fun openTaskDetails(imageId: String) {
-        val action = ImagesFragmentDirections.actionImagesFragmentToDetailFragment(/*imageId*/)
+        val action = ImagesFragmentDirections.actionImagesFragmentToDetailFragment(imageId)
         findNavController().navigate(action)
     }
 }

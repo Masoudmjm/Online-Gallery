@@ -1,7 +1,10 @@
 package com.masoudjafari.kiliaro.data
 
+import android.widget.ImageView
+import androidx.databinding.BindingAdapter
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.bumptech.glide.Glide
 
 @Entity
 data class Image(
@@ -21,3 +24,5 @@ data class Image(
     val resx: Int?,
     val resy: Int?
 )
+
+

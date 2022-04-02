@@ -16,6 +16,11 @@
 
 package com.masoudjafari.kiliaro.data
 
+import android.app.Application
+import android.widget.Toast
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlin.coroutines.coroutineContext
+
 
 /**
  * A generic class that holds a value with its loading status.
@@ -34,10 +39,17 @@ sealed class Result<out R> {
             Loading -> "Loading"
         }
     }
+
+    private fun returnError(exception: Exception) {
+        Toast.makeText(Application(), "$exception", Toast.LENGTH_LONG).show()
+    }
 }
 
 /**
  * `true` if [Result] is of type [Success] & holds non-null [Success.data].
  */
-val Result<*>.succeeded
-    get() = this is Result.Success && data != null
+val Result<*>.error
+    get() = this is Result.Error
+
+
+

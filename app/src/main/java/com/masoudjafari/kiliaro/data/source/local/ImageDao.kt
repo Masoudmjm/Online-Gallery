@@ -19,6 +19,9 @@ interface ImageDao {
     @Query("SELECT * FROM image WHERE filename LIKE :first AND " + "user_id LIKE :last LIMIT 1")
     fun findByName(first: String, last: String): Image
 
+    @Query("SELECT * FROM Image WHERE id = :imageId")
+    fun observeImageById(imageId: String): LiveData<Image>
+
     @Query("DELETE FROM Image")
     fun deleteImages()
 

@@ -28,7 +28,7 @@ class DefaultImagesRepository(
     }
 
     override fun observeImages(): LiveData<Result<List<Image>>> {
-        return imagesLocalDataSource.observeTasks()
+        return imagesLocalDataSource.observeImages()
     }
 
     private suspend fun updateImagesFromRemoteDataSource() {
@@ -48,8 +48,11 @@ class DefaultImagesRepository(
         updateImagesFromRemoteDataSource()
     }
 
-    override suspend fun saveImage(image: Image) {
+    override fun observeImage(imageId: String): LiveData<Result<Image>> {
+        return imagesLocalDataSource.observeImage(imageId)
+    }
 
+    override suspend fun saveImage(image: Image) {
     }
 
     override suspend fun deleteAllImages() {}

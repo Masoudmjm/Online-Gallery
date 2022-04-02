@@ -14,7 +14,7 @@ class ImagesLocalDataSource internal constructor(
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ): ImagesDataSource {
 
-    override fun observeTasks(): LiveData<Result<List<Image>>> {
+    override fun observeImages(): LiveData<Result<List<Image>>> {
         return imageDao.observeImages().map {
             Result.Success(it)
         }
@@ -30,6 +30,12 @@ class ImagesLocalDataSource internal constructor(
 
     override suspend fun refreshImages() {
         TODO("Not yet implemented")
+    }
+
+    override fun observeImage(imageId: String): LiveData<Result<Image>> {
+        return imageDao.observeImageById(imageId).map {
+            Result.Success(it)
+        }
     }
 
     override suspend fun saveImage(image: Image) {

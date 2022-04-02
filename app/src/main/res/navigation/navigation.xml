@@ -12,18 +12,18 @@
         tools:layout="@layout/fragment_images" >
         <action
             android:id="@+id/action_imagesFragment_to_detailFragment"
-            app:destination="@id/detailFragment" />
+            app:destination="@id/imageDetailFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/detailFragment"
-        android:name="com.masoudjafari.kiliaro.detail.DetailFragment"
+        android:id="@+id/imageDetailFragment"
+        android:name="com.masoudjafari.kiliaro.imageDetail.ImageDetailFragment"
         android:label="fragment_detail"
-        tools:layout="@layout/fragment_detail">
-       <!-- <argument
-            android:name="id"
-            app:argType="String"
-            android:defaultValue="0"/>-->
+        tools:layout="@layout/fragment_image_detail">
+        <argument
+            android:name="imageId"
+            app:argType="string"
+            android:defaultValue="0"/>
     </fragment>
 
 </navigation>
