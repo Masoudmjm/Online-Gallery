@@ -5,6 +5,8 @@ import androidx.annotation.StringRes
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.*
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.Target
 import com.masoudjafari.kiliaro.Event
 import com.masoudjafari.kiliaro.R
 import com.masoudjafari.kiliaro.data.source.ImagesRepository
@@ -56,9 +58,11 @@ class ImageDetailViewModel @Inject constructor(
         @JvmStatic
         @BindingAdapter("imageUrl")
         fun loadImage(view: ImageView, url: String) {
-            if (!url.isNullOrEmpty()) {
+            if (url.isNotEmpty()) {
                 Glide.with(view.context)
                     .load(url)
+                    .apply(RequestOptions()
+                        .override(Target.SIZE_ORIGINAL))
                     .into(view)
             }
         }

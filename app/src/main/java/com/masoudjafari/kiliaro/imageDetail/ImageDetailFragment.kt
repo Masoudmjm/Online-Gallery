@@ -29,10 +29,9 @@ class ImageDetailFragment : Fragment() {
         binding = FragmentImageDetailBinding.bind(view).apply {
             viewmodel = viewModel
         }
+        sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
         binding.lifecycleOwner = this.viewLifecycleOwner
         viewModel.start(args.imageId)
-
-        sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
 
         return view
     }
