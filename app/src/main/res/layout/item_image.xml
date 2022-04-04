@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="@dimen/fragment_padding"
+        android:padding="@dimen/list_item_padding"
         android:clipToPadding="false"
         android:onClick="@{() -> viewmodel.openImage(image.id,imageIv)}">
 
@@ -51,9 +51,10 @@
             android:id="@+id/image_size"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="end"
+            android:gravity="center"
             android:text= "@{DataBindingConverter.humanReadableByteCount(image.size)}"
             android:textSize="@dimen/text_size"
+            android:layout_marginTop="2dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
