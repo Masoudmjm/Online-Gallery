@@ -28,6 +28,8 @@ class ImageDetailViewModel @Inject constructor(
     }
     val image: LiveData<Image?> = _image
 
+    val isDataAvailable: LiveData<Boolean> = _image.map { it != null }
+
     private val _dataLoading = MutableLiveData<Boolean>()
     val dataLoading: LiveData<Boolean> = _dataLoading
 
@@ -41,18 +43,24 @@ class ImageDetailViewModel @Inject constructor(
         return if (imageResult is Result.Success) {
             imageResult.data
         } else {
-            showSnackbarMessage(R.string.loading_image_error)
+            showSnackbarMessage(R.string.loading_images_error)
             null
         }
     }
 
-    private fun loadImage(view: ImageView, url: String) {
-        Glide.with(view.context)
-            .load(url)
-            .into(view)
-    }
-
     private fun showSnackbarMessage(@StringRes message: Int) {
         _snackbarText.value = Event(message)
+    }
+
+    companion object {
+        @JvmStatic
+        @BindingAdapter("imageUrl")
+        fun loadImage(view: ImageView, url: String) {
+            if (!url.isNullOrEmpty()) {
+                Glide.with(view.context)
+                    .load(url)
+                    .into(view)
+            }
+        }
     }
 }

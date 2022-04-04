@@ -21,7 +21,7 @@ import com.masoudjafari.kiliaro.ImagesAdapter
 import com.masoudjafari.kiliaro.data.Image
 
 /**
- * [BindingAdapter]s for the [Task]s list.
+ * [BindingAdapter]s for the [Image]s list.
  */
 @BindingAdapter("app:items")
 fun setItems(listView: RecyclerView, items: List<Image>?) {

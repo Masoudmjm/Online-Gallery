@@ -1,7 +1,11 @@
 package com.masoudjafari.kiliaro.images
 
+import android.widget.ImageView
+import androidx.databinding.BindingAdapter
 import androidx.lifecycle.*
+import com.bumptech.glide.Glide
 import com.masoudjafari.kiliaro.Event
+import com.masoudjafari.kiliaro.R
 import com.masoudjafari.kiliaro.data.Image
 import com.masoudjafari.kiliaro.data.Result
 import com.masoudjafari.kiliaro.data.source.ImagesRepository
@@ -11,20 +15,35 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ImagesViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
     private val imagesRepository: ImagesRepository
 ) : ViewModel() {
 
     private val _forceUpdate = MutableLiveData(false)
 
-    private val _openTaskEvent = MutableLiveData<Event<String>>()
-    val openImageEvent: LiveData<Event<String>> = _openTaskEvent
+    private val _snackbarText = MutableLiveData<Event<Int>>()
+    val snackbarText: LiveData<Event<Int>> = _snackbarText
+
+    private val _thumbnailQueryParameters = MutableLiveData<String>()
+    val thumbnailQueryParameters : MutableLiveData<String> = _thumbnailQueryParameters
+
+    private val _openImageEvent = MutableLiveData<Event<String>>()
+    val openImageEvent: LiveData<Event<String>> = _openImageEvent
+
+    private val _transitionImage = MutableLiveData<ImageView>()
+    val transitionImage: MutableLiveData<ImageView> = _transitionImage
 
     private val _items: LiveData<List<Image>> = _forceUpdate.switchMap { forceUpdate ->
-        if (forceUpdate) {
-            _dataLoading.value = true
-            viewModelScope.launch {
-                imagesRepository.getImages(forceUpdate)
+        var imagesSize = 0
+        viewModelScope.launch {
+            val result = imagesRepository.getImages(false)
+            if (result is Result.Success)
+            imagesSize = result.data.size
+
+            if (forceUpdate || imagesSize == 0) {
+                _dataLoading.value = true
+                val imageResult = imagesRepository.getImages(true)
+                if (imageResult is Result.Error)
+                    showSnackbarMessage(R.string.loading_images_error)
                 _dataLoading.value = false
             }
         }
@@ -44,7 +63,7 @@ class ImagesViewModel @Inject constructor(
             result.value = imageResult.data!!
         } else {
             result.value = emptyList()
-            // TODO show error to user
+            showSnackbarMessage(R.string.loading_images_error)
             isDataLoadingError.value = true
         }
 
@@ -53,15 +72,32 @@ class ImagesViewModel @Inject constructor(
 
     private val isDataLoadingError = MutableLiveData<Boolean>()
 
-    fun openTask(imageId: String) {
-        _openTaskEvent.value = Event(imageId)
-    }
-
-    fun loadTasks(forceUpdate: Boolean) {
-        _forceUpdate.value = forceUpdate
+    fun openImage(imageId: String, imageView: ImageView) {
+        _transitionImage.value = imageView
+        _openImageEvent.value = Event(imageId)
     }
 
     fun refresh() {
         _forceUpdate.value = true
+    }
+
+    fun setScreenWidth(screenWidth: Int) {
+        _thumbnailQueryParameters.value = "?w=${screenWidth/3}&h=${screenWidth/3}&m=crop"
+    }
+
+    private fun showSnackbarMessage(message: Int) {
+        _snackbarText.value = Event(message)
+    }
+
+    companion object {
+        @JvmStatic
+        @BindingAdapter("loadImage")
+        fun loadImage(view: ImageView, url: String) {
+            if (url.isNotEmpty()) {
+                Glide.with(view.context)
+                    .load(url)
+                    .into(view)
+            }
+        }
     }
 }

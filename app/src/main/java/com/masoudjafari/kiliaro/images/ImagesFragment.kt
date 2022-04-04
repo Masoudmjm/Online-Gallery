@@ -1,16 +1,21 @@
 package com.masoudjafari.kiliaro.images
 
+import android.content.Context
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.*
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.masoudjafari.kiliaro.EventObserver
 import com.masoudjafari.kiliaro.ImagesAdapter
 import com.masoudjafari.kiliaro.R
 import com.masoudjafari.kiliaro.databinding.FragmentImagesBinding
+import com.masoudjafari.kiliaro.util.setupSnackbar
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -36,10 +41,12 @@ class ImagesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.lifecycleOwner = this.viewLifecycleOwner
+        setupSnackbar()
         setLayoutManager()
         setupListAdapter()
         setupNavigation()
         setHasOptionsMenu(true)
+        viewModel.setScreenWidth(getScreenWidth(requireContext()))
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -58,7 +65,7 @@ class ImagesFragment : Fragment() {
 
     private fun setupNavigation() {
         viewModel.openImageEvent.observe(viewLifecycleOwner, EventObserver {
-            openTaskDetails(it)
+            openImageDetails(it, viewModel.transitionImage.value!!)
         })
     }
 
@@ -77,8 +84,22 @@ class ImagesFragment : Fragment() {
         }
     }
 
-    private fun openTaskDetails(imageId: String) {
+    private fun openImageDetails(imageId: String, imageView: ImageView) {
+        val extras = FragmentNavigatorExtras(imageView to "ImageDetailTransition")
         val action = ImagesFragmentDirections.actionImagesFragmentToDetailFragment(imageId)
-        findNavController().navigate(action)
+        findNavController().navigate(action, extras)
     }
+
+    private fun setupSnackbar() {
+        view?.setupSnackbar(viewLifecycleOwner, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
+    }
+
+    private fun getScreenWidth(context: Context): Int {
+        val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val display = wm.defaultDisplay
+        val metrics = DisplayMetrics()
+        display.getMetrics(metrics)
+        return metrics.widthPixels
+    }
+
 }

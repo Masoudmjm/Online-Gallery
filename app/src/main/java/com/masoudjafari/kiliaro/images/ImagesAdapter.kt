@@ -18,10 +18,6 @@ class ImagesAdapter(private val viewModel: ImagesViewModel) :
         val item = getItem(position)
 
         holder.bind(viewModel, item)
-        Glide.with(holder.itemView.context)
-            .load(item.thumbnail_url)
-            .diskCacheStrategy(DiskCacheStrategy.DATA)
-            .into(holder.binding.imageIv)
 
         val transitionName = "ProductDetailTransition$position"
         holder.binding.imageIv.transitionName = transitionName

@@ -2,5 +2,5 @@
     <string name="app_name">kiliaro</string>
 
     <string name="menu_refresh">clear cache and refresh</string>
-    <string name="loading_image_error">Error while loading image</string>
+    <string name="loading_images_error">Error while loading images</string>
 </resources>

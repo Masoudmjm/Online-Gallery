@@ -15,26 +15,4 @@ interface RetrofitService {
 
     @GET("/shared/djlCbGusTJamg_ca4axEVw/media")
     suspend fun getAll() : List<Image>
-
-    /*companion object {
-        private val okHttpClient = OkHttpClient().newBuilder()
-            .addInterceptor(HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
-            })
-            .readTimeout(20, TimeUnit.SECONDS)
-            .build()
-
-        private var retrofitService: RetrofitService? = null
-        fun getInstance() : RetrofitService {
-            if (retrofitService == null) {
-                val retrofit = Retrofit.Builder()
-                    .client(okHttpClient)
-                    .baseUrl("https://api1.kiliaro.com")
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build()
-                retrofitService = retrofit.create(RetrofitService::class.java)
-            }
-            return retrofitService!!
-        }
-    }*/
 }

@@ -1,6 +1,7 @@
 package com.masoudjafari.kiliaro.imageDetail
 
 import android.os.Bundle
+import android.transition.TransitionInflater
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -31,10 +32,7 @@ class ImageDetailFragment : Fragment() {
         binding.lifecycleOwner = this.viewLifecycleOwner
         viewModel.start(args.imageId)
 
-        /*val imageUrl= MutableLiveData<String>()
-        imageUrl.observe(viewLifecycleOwner, Observer {
-            imageUrl.set(it)
-        })*/
+        sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
 
         return view
     }
