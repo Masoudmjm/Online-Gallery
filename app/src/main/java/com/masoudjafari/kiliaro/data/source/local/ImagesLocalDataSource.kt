@@ -28,9 +28,7 @@ class ImagesLocalDataSource internal constructor(
         }
     }
 
-    override suspend fun refreshImages() {
-        TODO("Not yet implemented")
-    }
+    override suspend fun refreshImages() {}
 
     override fun observeImage(imageId: String): LiveData<Result<Image>> {
         return imageDao.observeImageById(imageId).map {
@@ -45,10 +43,4 @@ class ImagesLocalDataSource internal constructor(
     override suspend fun deleteAllImages() = withContext(ioDispatcher) {
         imageDao.deleteImages()
     }
-
-    override suspend fun getId(): String {
-        TODO("Not yet implemented")
-    }
-
-
 }

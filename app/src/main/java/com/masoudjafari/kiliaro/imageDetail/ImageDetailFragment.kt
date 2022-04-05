@@ -11,8 +11,10 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.snackbar.Snackbar
 import com.masoudjafari.kiliaro.R
 import com.masoudjafari.kiliaro.databinding.FragmentImageDetailBinding
+import com.masoudjafari.kiliaro.util.setupSnackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,7 +31,9 @@ class ImageDetailFragment : Fragment() {
         binding = FragmentImageDetailBinding.bind(view).apply {
             viewmodel = viewModel
         }
+        // to run transition
         sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+
         binding.lifecycleOwner = this.viewLifecycleOwner
         viewModel.start(args.imageId)
         return view
@@ -39,6 +43,11 @@ class ImageDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val (width, height) = getScreenWidth(requireContext())
         viewModel.setScreenWidth(width, height)
+        setupSnackbar()
+    }
+
+    private fun setupSnackbar() {
+        view?.setupSnackbar(viewLifecycleOwner, viewModel.snackbarText, Snackbar.LENGTH_SHORT)
     }
 
     private fun getScreenWidth(context: Context): Pair<Int,Int> {

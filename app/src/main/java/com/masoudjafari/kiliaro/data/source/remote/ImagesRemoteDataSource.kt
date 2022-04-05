@@ -50,13 +50,7 @@ class ImagesRemoteDataSource internal constructor(
         }
     }
 
-    override suspend fun saveImage(image: Image) {
-    }
+    override suspend fun saveImage(image: Image) {}
 
-    override suspend fun deleteAllImages() {
-    }
-
-    override suspend fun getId(): String {
-        TODO("Not yet implemented")
-    }
+    override suspend fun deleteAllImages() {}
 }

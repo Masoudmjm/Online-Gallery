@@ -17,6 +17,4 @@ interface ImagesDataSource {
     suspend fun saveImage(image: Image)
 
     suspend fun deleteAllImages()
-
-    suspend fun getId() : String
 }

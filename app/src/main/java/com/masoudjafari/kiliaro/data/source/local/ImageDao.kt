@@ -13,12 +13,6 @@ interface ImageDao {
     @Query("SELECT * FROM Image")
     fun getAll(): List<Image>
 
-    @Query("SELECT * FROM image WHERE id IN (:userIds)")
-    fun loadAllByIds(userIds: IntArray): List<Image>
-
-    @Query("SELECT * FROM image WHERE filename LIKE :first AND " + "user_id LIKE :last LIMIT 1")
-    fun findByName(first: String, last: String): Image
-
     @Query("SELECT * FROM Image WHERE id = :imageId")
     fun observeImageById(imageId: String): LiveData<Image>
 
@@ -27,7 +21,4 @@ interface ImageDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertImage(image: Image)
-
-    @Delete
-    fun delete(image: Image)
 }

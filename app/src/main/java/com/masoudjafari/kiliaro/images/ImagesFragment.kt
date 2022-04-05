@@ -45,7 +45,7 @@ class ImagesFragment : Fragment() {
         setupListAdapter()
         setupNavigation()
         setHasOptionsMenu(true)
-        viewModel.setScreenWidth(getScreenWidth(requireContext()))
+        viewModel.setQueryParametersFromScreenWidth(getScreenWidth(requireContext()))
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

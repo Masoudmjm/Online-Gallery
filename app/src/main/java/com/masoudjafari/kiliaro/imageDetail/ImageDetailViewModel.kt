@@ -36,14 +36,7 @@ class ImageDetailViewModel @Inject constructor(
     }
     val image: LiveData<Image?> = _image
 
-    val isDataAvailable: LiveData<Boolean> = _image.map { it != null }
-
-    private val _dataLoading = MutableLiveData<Boolean>()
-    val dataLoading: LiveData<Boolean> = _dataLoading
-
     fun start(imageId: String) {
-        if (_dataLoading.value == true || imageId == _imageId.value)
-            return
         _imageId.value = imageId
     }
 
@@ -65,6 +58,7 @@ class ImageDetailViewModel @Inject constructor(
     }
 
     companion object {
+        // loading shimmer
         @JvmStatic
         private val shimmer = Shimmer.AlphaHighlightBuilder()
             .setDuration(1800)

@@ -113,11 +113,10 @@ object ImagesRepositoryModule {
     @Provides
     fun provideImagesRepository(
         @AppModule.RemoteImagesDataSource remoteImagesDataSource: ImagesDataSource,
-        @AppModule.LocalImagesDataSource localImagesDataSource: ImagesDataSource,
-        ioDispatcher: CoroutineDispatcher
+        @AppModule.LocalImagesDataSource localImagesDataSource: ImagesDataSource
     ): ImagesRepository {
         return DefaultImagesRepository(
-            remoteImagesDataSource, localImagesDataSource, ioDispatcher
+            remoteImagesDataSource, localImagesDataSource
         )
     }
 }

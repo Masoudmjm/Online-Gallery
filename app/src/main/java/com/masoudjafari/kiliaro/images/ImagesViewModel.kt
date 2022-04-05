@@ -53,12 +53,12 @@ class ImagesViewModel @Inject constructor(
                 _dataLoading.value = false
             }
         }
-        imagesRepository.observeImages().distinctUntilChanged().switchMap { filterImages(it) }
+        imagesRepository.observeImages().distinctUntilChanged().switchMap { setImages(it) }
     }
 
     val items: LiveData<List<Image>> = _items
 
-    private fun filterImages(imageResult: Result<List<Image>>): LiveData<List<Image>> {
+    private fun setImages(imageResult: Result<List<Image>>): LiveData<List<Image>> {
         val result = MutableLiveData<List<Image>>()
 
         if (imageResult is Result.Success)
@@ -67,7 +67,6 @@ class ImagesViewModel @Inject constructor(
             result.value = emptyList()
             showSnackbarMessage(R.string.loading_images_error)
         }
-
         return result
     }
 
@@ -80,7 +79,7 @@ class ImagesViewModel @Inject constructor(
         _forceUpdateFromRemote.value = true
     }
 
-    fun setScreenWidth(screenWidth: Int) {
+    fun setQueryParametersFromScreenWidth(screenWidth: Int) {
         _thumbnailQueryParameters.value = "?w=${screenWidth/gridColumns}&h=${screenWidth/gridColumns}&m=${ResizeMode.CROPPED.value}"
     }
 

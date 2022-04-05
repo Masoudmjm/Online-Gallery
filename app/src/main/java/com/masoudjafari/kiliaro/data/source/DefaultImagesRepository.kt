@@ -11,7 +11,6 @@ import kotlinx.coroutines.Dispatchers
 class DefaultImagesRepository(
     private val imagesRemoteDataSource: ImagesDataSource,
     private val imagesLocalDataSource: ImagesDataSource,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ImagesRepository {
 
     override suspend fun getImages(forceUpdate: Boolean): Result<List<Image>> {
@@ -51,9 +50,4 @@ class DefaultImagesRepository(
     override fun observeImage(imageId: String): LiveData<Result<Image>> {
         return imagesLocalDataSource.observeImage(imageId)
     }
-
-    override suspend fun saveImage(image: Image) {
-    }
-
-    override suspend fun deleteAllImages() {}
 }
