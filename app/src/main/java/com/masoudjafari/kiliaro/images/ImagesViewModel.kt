@@ -1,27 +1,30 @@
 package com.masoudjafari.kiliaro.images
 
 import android.widget.ImageView
-import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.*
 import com.bumptech.glide.Glide
-import com.facebook.shimmer.Shimmer
-import com.facebook.shimmer.ShimmerDrawable
 import com.masoudjafari.kiliaro.Event
 import com.masoudjafari.kiliaro.R
 import com.masoudjafari.kiliaro.data.Image
 import com.masoudjafari.kiliaro.data.Result
 import com.masoudjafari.kiliaro.data.source.ImagesRepository
+import com.masoudjafari.kiliaro.util.ResizeMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 
 @HiltViewModel
 class ImagesViewModel @Inject constructor(
     private val imagesRepository: ImagesRepository
 ) : ViewModel() {
 
-    private val _forceUpdate = MutableLiveData(false)
+    private val _forceUpdateFromRemote = MutableLiveData(false)
+    private val gridColumns = 3
+
+    private val _dataLoading = MutableLiveData<Boolean>()
+    val dataLoading: LiveData<Boolean> = _dataLoading
 
     private val _snackbarText = MutableLiveData<Event<Int>>()
     val snackbarText: LiveData<Event<Int>> = _snackbarText
@@ -35,7 +38,7 @@ class ImagesViewModel @Inject constructor(
     private val _transitionImage = MutableLiveData<ImageView>()
     val transitionImage: MutableLiveData<ImageView> = _transitionImage
 
-    private val _items: LiveData<List<Image>> = _forceUpdate.switchMap { forceUpdate ->
+    private val _items: LiveData<List<Image>> = _forceUpdateFromRemote.switchMap { forceUpdate ->
         var imagesSize = 0
         viewModelScope.launch {
             val result = imagesRepository.getImages(false)
@@ -55,25 +58,18 @@ class ImagesViewModel @Inject constructor(
 
     val items: LiveData<List<Image>> = _items
 
-    private val _dataLoading = MutableLiveData<Boolean>()
-    val dataLoading: LiveData<Boolean> = _dataLoading
-
     private fun filterImages(imageResult: Result<List<Image>>): LiveData<List<Image>> {
         val result = MutableLiveData<List<Image>>()
 
-        if (imageResult is Result.Success) {
-            isDataLoadingError.value = false
+        if (imageResult is Result.Success)
             result.value = imageResult.data!!
-        } else {
+        else {
             result.value = emptyList()
             showSnackbarMessage(R.string.loading_images_error)
-            isDataLoadingError.value = true
         }
 
         return result
     }
-
-    private val isDataLoadingError = MutableLiveData<Boolean>()
 
     fun openImage(imageId: String, imageView: ImageView) {
         _transitionImage.value = imageView
@@ -81,11 +77,11 @@ class ImagesViewModel @Inject constructor(
     }
 
     fun refresh() {
-        _forceUpdate.value = true
+        _forceUpdateFromRemote.value = true
     }
 
     fun setScreenWidth(screenWidth: Int) {
-        _thumbnailQueryParameters.value = "?w=${screenWidth/3}&h=${screenWidth/3}&m=crop"
+        _thumbnailQueryParameters.value = "?w=${screenWidth/gridColumns}&h=${screenWidth/gridColumns}&m=${ResizeMode.CROPPED.value}"
     }
 
     private fun showSnackbarMessage(message: Int) {
@@ -93,25 +89,13 @@ class ImagesViewModel @Inject constructor(
     }
 
     companion object {
-        private val shimmer = Shimmer.AlphaHighlightBuilder()// The attributes for a ShimmerDrawable is set by this builder
-            .setDuration(1800) // how long the shimmering animation takes to do one full sweep
-            .setBaseAlpha(0.7f) //the alpha of the underlying children
-            .setHighlightAlpha(0.6f) // the shimmer alpha amount
-            .setDirection(Shimmer.Direction.LEFT_TO_RIGHT)
-            .setAutoStart(true)
-            .build()
-
-        val shimmerDrawable = ShimmerDrawable().apply {
-            setShimmer(shimmer)
-        }
-
         @JvmStatic
         @BindingAdapter("loadImage")
         fun loadImage(view: ImageView, url: String) {
             if (url.isNotEmpty()) {
                 Glide.with(view.context)
                     .load(url)
-//                    .placeholder(shimmerDrawable)
+                    .error(R.drawable.error_load_image)
                     .into(view)
             }
         }

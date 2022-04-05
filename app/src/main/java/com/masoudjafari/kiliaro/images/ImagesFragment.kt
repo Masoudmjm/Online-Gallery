@@ -12,7 +12,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.masoudjafari.kiliaro.EventObserver
-import com.masoudjafari.kiliaro.ImagesAdapter
 import com.masoudjafari.kiliaro.R
 import com.masoudjafari.kiliaro.databinding.FragmentImagesBinding
 import com.masoudjafari.kiliaro.util.setupSnackbar
@@ -42,7 +41,7 @@ class ImagesFragment : Fragment() {
 
         binding.lifecycleOwner = this.viewLifecycleOwner
         setupSnackbar()
-        setLayoutManager()
+        setupListLayoutManager()
         setupListAdapter()
         setupNavigation()
         setHasOptionsMenu(true)
@@ -65,13 +64,12 @@ class ImagesFragment : Fragment() {
 
     private fun setupNavigation() {
         viewModel.openImageEvent.observe(viewLifecycleOwner, EventObserver {
-            openImageDetails(it, viewModel.transitionImage.value!!)
+            openImageDetail(it, viewModel.transitionImage.value!!)
         })
     }
 
-    private fun setLayoutManager() {
-        binding.imagesList.layoutManager =
-            GridLayoutManager(context, 3, GridLayoutManager.VERTICAL, false)
+    private fun setupListLayoutManager() {
+        binding.imagesList.layoutManager = GridLayoutManager(context, 3, GridLayoutManager.VERTICAL, false)
     }
 
     private fun setupListAdapter() {
@@ -84,7 +82,7 @@ class ImagesFragment : Fragment() {
         }
     }
 
-    private fun openImageDetails(imageId: String, imageView: ImageView) {
+    private fun openImageDetail(imageId: String, imageView: ImageView) {
         val extras = FragmentNavigatorExtras(imageView to "ImageDetailTransition")
         val action = ImagesFragmentDirections.actionImagesFragmentToDetailFragment(imageId)
         findNavController().navigate(action, extras)

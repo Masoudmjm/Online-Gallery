@@ -1,25 +1,23 @@
-package com.masoudjafari.kiliaro
+package com.masoudjafari.kiliaro.images
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.masoudjafari.kiliaro.data.Image
 import com.masoudjafari.kiliaro.databinding.ItemImageBinding
-import com.masoudjafari.kiliaro.images.ImagesViewModel
 
-class ImagesAdapter(private val viewModel: ImagesViewModel) :
-    ListAdapter<Image, ViewHolder>(ImagesDiffCallback()) {
+class ImagesAdapter(private val viewModel: ImagesViewModel) : ListAdapter<Image, ViewHolder>(
+    ImagesDiffCallback()
+) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
 
         holder.bind(viewModel, item)
 
-        val transitionName = "ProductDetailTransition$position"
+        val transitionName = item.id
         holder.binding.imageIv.transitionName = transitionName
     }
 
@@ -41,7 +39,6 @@ class ViewHolder private constructor(val binding: ItemImageBinding) :
         fun from(parent: ViewGroup): ViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = ItemImageBinding.inflate(layoutInflater, parent, false)
-
             return ViewHolder(binding)
         }
     }

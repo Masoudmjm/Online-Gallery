@@ -29,7 +29,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:imageUrl='@{viewmodel.image != null ? viewmodel.image.thumbnail_url : ""}'/>
+            app:imageUrl='@{viewmodel.image != null ? viewmodel.image.thumbnail_url+viewmodel.thumbnailQueryParameters : ""}'/>
 
         <TextView
             android:layout_width="0dp"
@@ -40,7 +40,8 @@
             android:text='@{viewmodel.image != null ? DataBindingConverter.getDateTimeFromString(viewmodel.image.created_at) : ""}'
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:textColor="@color/black" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

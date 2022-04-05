@@ -7,12 +7,15 @@ import androidx.lifecycle.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
+import com.facebook.shimmer.Shimmer
+import com.facebook.shimmer.ShimmerDrawable
 import com.masoudjafari.kiliaro.Event
 import com.masoudjafari.kiliaro.R
 import com.masoudjafari.kiliaro.data.source.ImagesRepository
 import javax.inject.Inject
 import com.masoudjafari.kiliaro.data.Result
 import com.masoudjafari.kiliaro.data.Image
+import com.masoudjafari.kiliaro.util.ResizeMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 
 @HiltViewModel
@@ -24,6 +27,9 @@ class ImageDetailViewModel @Inject constructor(
 
     private val _snackbarText = MutableLiveData<Event<Int>>()
     val snackbarText: LiveData<Event<Int>> = _snackbarText
+
+    private val _thumbnailQueryParameters = MutableLiveData<String>()
+    val thumbnailQueryParameters : MutableLiveData<String> = _thumbnailQueryParameters
 
     private val _image = _imageId.switchMap { imageId ->
         imagesRepository.observeImage(imageId).map { computeResult(it) }
@@ -54,7 +60,25 @@ class ImageDetailViewModel @Inject constructor(
         _snackbarText.value = Event(message)
     }
 
+    fun setScreenWidth(screenWidth: Int, screenHeight: Int) {
+        _thumbnailQueryParameters.value = "?w=${screenWidth}&h=${screenHeight}&m=${ResizeMode.MINIMUM_DIMENSION.value}"
+    }
+
     companion object {
+        @JvmStatic
+        private val shimmer = Shimmer.AlphaHighlightBuilder()
+            .setDuration(1800)
+            .setBaseAlpha(0.98f)
+            .setHighlightAlpha(0.92f)
+            .setDirection(Shimmer.Direction.LEFT_TO_RIGHT)
+            .setAutoStart(true)
+            .build()
+
+        @JvmStatic
+        val shimmerDrawable = ShimmerDrawable().apply {
+            setShimmer(shimmer)
+        }
+
         @JvmStatic
         @BindingAdapter("imageUrl")
         fun loadImage(view: ImageView, url: String) {
@@ -63,6 +87,8 @@ class ImageDetailViewModel @Inject constructor(
                     .load(url)
                     .apply(RequestOptions()
                         .override(Target.SIZE_ORIGINAL))
+                    .placeholder(shimmerDrawable)
+                    .error(R.drawable.error_load_image)
                     .into(view)
             }
         }
