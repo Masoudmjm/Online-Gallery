@@ -10,8 +10,6 @@ interface ImagesDataSource {
 
     suspend fun getImages() : Result<List<Image>>
 
-    suspend fun refreshImages()
-
     fun observeImage(imageId: String): LiveData<Result<Image>>
 
     suspend fun saveImage(image: Image)

@@ -26,10 +26,6 @@ class ImagesRemoteDataSource internal constructor(
         }
     }
 
-    override suspend fun refreshImages() {
-        observableImages.value = getImages()!!
-    }
-
     override fun observeImages(): LiveData<Result<List<Image>>> {
         return observableImages
     }

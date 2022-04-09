@@ -43,10 +43,6 @@ class DefaultImagesRepository(
         }
     }
 
-    override suspend fun refreshImages() {
-        updateImagesFromRemoteDataSource()
-    }
-
     override fun observeImage(imageId: String): LiveData<Result<Image>> {
         return imagesLocalDataSource.observeImage(imageId)
     }

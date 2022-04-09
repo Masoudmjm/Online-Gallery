@@ -55,7 +55,7 @@ class ImagesFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.refresh -> {
-                viewModel.refresh()
+                viewModel.refreshFromRemote()
                 true
             }
             else -> false

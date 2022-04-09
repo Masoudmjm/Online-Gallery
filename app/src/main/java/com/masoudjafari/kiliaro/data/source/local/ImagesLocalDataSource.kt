@@ -28,8 +28,6 @@ class ImagesLocalDataSource internal constructor(
         }
     }
 
-    override suspend fun refreshImages() {}
-
     override fun observeImage(imageId: String): LiveData<Result<Image>> {
         return imageDao.observeImageById(imageId).map {
             Result.Success(it)

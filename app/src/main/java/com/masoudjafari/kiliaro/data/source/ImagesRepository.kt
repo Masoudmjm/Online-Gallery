@@ -10,7 +10,5 @@ interface ImagesRepository {
 
     suspend fun getImages(forceUpdate: Boolean = false) : Result<List<Image>>
 
-    suspend fun refreshImages()
-
     fun observeImage(imageId: String): LiveData<Result<Image>>
 }
